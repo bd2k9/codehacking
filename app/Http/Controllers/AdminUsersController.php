@@ -7,6 +7,7 @@ use App\User;
 use App\Role;
 use App\Photo;
 use App\Http\Requests\UsersCreateRequest;
+use App\Http\Requests\UsersEditRequest;
 use Ramsey\Uuid\Uuid;
 
 class AdminUsersController extends Controller
@@ -48,7 +49,17 @@ class AdminUsersController extends Controller
     public function store(UsersCreateRequest $request)
     {
 
-        $input = $request->all();
+        if(trim($request->password == '')){
+            
+            $input = $request->except('password');
+
+        } else {
+            
+            $input = $request->all();
+
+        }
+
+ 
 
         //Aqui estamos a adicionar uma foto ao utilizador e a adiciona-la 
         //Na tabela photos
@@ -79,8 +90,6 @@ class AdminUsersController extends Controller
 
         //Aqui estamos a encriptar a password
 
-        $input['password'] = bcrypt($request->password);
-
         User::create($input);
 
         return redirect('/admin/users');
@@ -94,7 +103,8 @@ class AdminUsersController extends Controller
      */
     public function show($id)
     {
-        return view('admin.users.show');
+
+        //return view('users.show');
     }
 
     /**
@@ -105,7 +115,11 @@ class AdminUsersController extends Controller
      */
     public function edit($id)
     {
-        //
+        $user = User::findOrFail($id);   
+
+        $roles = Role::pluck('name','id')->all();
+
+        return view('admin.users.edit', compact('user','roles'));
     }
 
     /**
@@ -115,9 +129,33 @@ class AdminUsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UsersEditRequest $request, $id)
     {
-        return view('admin.users.create');
+
+        $user = User::findOrFail($id);
+
+        $input = $request -> all();
+
+        if($file = $request->file('photo_id')){
+
+            $uuid4 = Uuid::uuid4();     
+            $ext = $file->getClientOriginalExtension();
+            $name = $uuid4->toString() . '.' . $ext;
+
+            $file->move('images',$name);
+
+            $photo = Photo::create(['file'=>$name]);
+
+            $input['photo_id'] = $photo->id;
+
+        }
+
+        $user->update($input);
+        
+
+        return redirect('/admin/users');
+
+        //return view('admin.users.create');
     }
 
     /**
