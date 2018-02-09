@@ -18,7 +18,8 @@ class Admin
 
     public function handle($request, Closure $next)
     {
-
+        //Aqui estamos a detectar o utilizador e, confirmando se é administrador, avança
+        //Caso contrário, volta à página inicial
         if(Auth::check()){
 
             if(Auth::user()->isAdmin()){

@@ -50,6 +50,9 @@ class Kernel extends HttpKernel
      *
      * @var array
      */
+
+//Ponto importante: se queremos acrescentar um middleware
+//temos de o registar aqui em primeiro lugar
     protected $routeMiddleware = [
         'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,

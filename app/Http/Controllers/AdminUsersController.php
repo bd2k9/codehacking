@@ -48,6 +48,8 @@ class AdminUsersController extends Controller
     public function store(UsersCreateRequest $request)
     {
 
+        //Aqui estamos a dizer que, caso queiramos editar sem a password, podemos fazer assim
+
         if(trim($request->password == '')){
             
             $input = $request->except('password');
@@ -167,11 +169,17 @@ class AdminUsersController extends Controller
      */
     public function destroy($id)
     {
+
+        //A primeira parte procura o id
+        //A segunda saca a foto do utilizador para ser apagada na fase seguinte
+
         $user = User::findOrFail($id);
 
         unlink(public_path() . $user->photo->file);
 
         $user->delete();
+
+        //Session dá uma mensagem no view a informar que o utilizador foi removido
 
         Session::flash('deleted_user','The user has been deleted');
 
