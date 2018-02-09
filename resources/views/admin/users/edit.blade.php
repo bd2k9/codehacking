@@ -40,13 +40,19 @@
     </div>
 
     <div class = "form-group">
-        {!! Form::submit('Update user', ['class'=>'btn btn-primary']) !!}
+        {!! Form::submit('Update user', ['class'=>'btn btn-primary col-sm-6']) !!}
     </div>
-    <div class = "form-group">
-    </div>
-</div>
 
     {!! Form::close() !!}
+
+    {!! Form::open(['method' => 'DELETE', 'action' => ['AdminUsersController@destroy', $user->id]]) !!}
+    <div class = "col-sm-9">
+            {!! Form::submit('Delete user', ['class'=>'btn btn-danger']) !!}
+        </div>
+        {!! Form::close() !!}
+    </div>
+
+
 
     <!-- Aqui estamos a incluir um blade que tem uma função específica
     Desde modo poupamos codigo -->

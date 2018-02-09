@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request; 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session; 
 use App\User;
 use App\Role;
 use App\Photo;
@@ -151,6 +152,8 @@ class AdminUsersController extends Controller
         }
 
         $user->update($input);
+
+        Session::flash('updated_user','The user has been updated');
         
 
         return redirect('/admin/users');
@@ -166,6 +169,10 @@ class AdminUsersController extends Controller
      */
     public function destroy($id)
     {
-        //
+        User::findOrFail($id)->delete();
+
+        Session::flash('deleted_user','The user has been deleted');
+
+        return redirect('/admin/users');
     }
 }
