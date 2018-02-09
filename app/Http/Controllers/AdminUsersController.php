@@ -7,6 +7,7 @@ use App\User;
 use App\Role;
 use App\Photo;
 use App\Http\Requests\UsersCreateRequest;
+use Ramsey\Uuid\Uuid;
 
 class AdminUsersController extends Controller
 {
@@ -51,14 +52,26 @@ class AdminUsersController extends Controller
 
         //Aqui estamos a adicionar uma foto ao utilizador e a adiciona-la 
         //Na tabela photos
+        //Se o formulario que preenchemos tiver uma foto entra neste if
+
 
         if($file = $request-> file('photo_id')) {
 
-            $name = time() . $file->getClientOriginalName();
+            //A foto tera o nome da data actual + o nome do ficheiro
+            $uuid4 = Uuid::uuid4();     
+            $ext = $file->getClientOriginalExtension();
+            $name = $uuid4->toString() . '.' . $ext;
+
+            //Ficheiro vai ser mexido para uma pasta chamada images no public
+            //Caso esta não exista é criada
 
             $file->move('images',$name);
 
+            //Aqui cria a foto propriamente dita no model photo que vai entrar na base de dados
+
             $photo = Photo::create(['file'=>$name]);
+
+            //Associamos o photo_id ao id da propria foto
 
             $input['photo_id'] = $photo->id;
 
