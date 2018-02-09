@@ -66,7 +66,7 @@ class AdminUsersController extends Controller
         //Se o formulario que preenchemos tiver uma foto entra neste if
 
 
-        if($file = $request-> file('photo_id')) {
+        if($file = $request->file('photo_id')) {
 
             //A foto tera o nome da data actual + o nome do ficheiro
             $uuid4 = Uuid::uuid4();     

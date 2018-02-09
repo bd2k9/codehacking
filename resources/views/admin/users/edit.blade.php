@@ -42,10 +42,11 @@
     <div class = "form-group">
         {!! Form::submit('Update user', ['class'=>'btn btn-primary']) !!}
     </div>
+    <div class = "form-group">
+    </div>
+</div>
 
     {!! Form::close() !!}
-
-</div>
 
     <!-- Aqui estamos a incluir um blade que tem uma função específica
     Desde modo poupamos codigo -->
