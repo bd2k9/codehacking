@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Post;
 use App\User;
 use App\Photo;
+use App\Category;
 use App\Http\Requests\PostsCreateRequest;
 use Illuminate\Support\Facades\Auth;
 use Ramsey\Uuid\Uuid;
@@ -31,7 +32,10 @@ class AdminPostsController extends Controller
      */
     public function create()
     {
-        return view('admin.posts.create');
+        //Procura todas as categorias
+        $categories = Category::pluck('name', 'id')->all();
+        //Manda-as para o view
+        return view('admin.posts.create',compact('categories'));
     }
 
     /**
