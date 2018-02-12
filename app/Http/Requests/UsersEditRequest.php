@@ -21,6 +21,9 @@ class UsersEditRequest extends FormRequest
      *
      * @return array
      */
+
+
+    //Aqui determina todos os parametros que são necessários para que o construtor funcione
     public function rules()
     {
         return [

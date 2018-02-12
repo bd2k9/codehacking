@@ -48,4 +48,10 @@ class User extends Authenticatable
 
     }
 
+    public function encryptPassword(UsersCreateRequest $request){
+
+        return $this->password->bcrypt($request['password']);
+
+    }
+
 }

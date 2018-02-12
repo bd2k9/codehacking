@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session; 
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Foundation\Auth\RegistersUsers;
 use App\User;
 use App\Role;
 use App\Photo;
@@ -56,6 +58,9 @@ class AdminUsersController extends Controller
 
         } else {
             
+            
+            $request['password'] = bcrypt($request->password);
+            
             $input = $request->all();
 
         }
@@ -84,6 +89,7 @@ class AdminUsersController extends Controller
             $photo = Photo::create(['file'=>$name]);
 
             //Associamos o photo_id ao id da propria foto
+            //Aqui é que mudamos os dados
 
             $input['photo_id'] = $photo->id;
 
@@ -132,10 +138,16 @@ class AdminUsersController extends Controller
      */
     public function update(UsersEditRequest $request, $id)
     {
-
+        //O UsersEditRequest é um mecanismo que diz à função o que deve receber obrigatoriamente
+        //Primeiro procura um utilizador definido no id
+        
         $user = User::findOrFail($id);
 
+        //O input vai receber todos os dados definidos no UsersEditRequest
+
         $input = $request -> all();
+
+        //Esta função serve para receber a foto, encriptando-a, metendo na pasta images e associando-a ao id
 
         if($file = $request->file('photo_id')){
 
@@ -151,11 +163,13 @@ class AdminUsersController extends Controller
 
         }
 
+        //Aqui actualiza e depois dá um sinal no site a informar que o utilizador esta actualizado
+        //Ver o blade criado
+
         $user->update($input);
 
         Session::flash('updated_user','The user has been updated');
         
-
         return redirect('/admin/users');
 
         //return view('admin.users.create');
@@ -175,7 +189,12 @@ class AdminUsersController extends Controller
 
         $user = User::findOrFail($id);
 
-        unlink(public_path() . $user->photo->file);
+        //Esta condição vai servir caso o utilizador não tenha uma foto
+
+        if(optional($user->photo)->file){
+            unlink(public_path() . $user->photo->file);   
+        }
+        
 
         $user->delete();
 
@@ -185,4 +204,5 @@ class AdminUsersController extends Controller
 
         return redirect('/admin/users');
     }
+
 }
