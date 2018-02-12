@@ -4,6 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Post;
+use App\User;
+use App\Photo;
+use App\Http\Requests\PostsCreateRequest;
+use Illuminate\Support\Facades\Auth;
+use Ramsey\Uuid\Uuid;
 
 class AdminPostsController extends Controller
 {
@@ -35,9 +40,31 @@ class AdminPostsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PostsCreateRequest $request)
     {
-        //
+        $input = $request->all();
+    
+        //Com o auth:user, podemos simplesmente evitar fazer o check das variaveis relacionadas com o utilizador
+
+        $user = Auth::user();
+
+        if($file = $request->file('photo_id')){
+
+            $uuid4 = Uuid::uuid4();     
+            $ext = $file->getClientOriginalExtension();
+            $name = $uuid4->toString() . '.' . $ext;
+
+            $file->move('images',$name);
+
+            $photo = Photo::create(['file'=>$name]);
+
+            $input['photo_id'] = $photo->id;
+
+        }
+
+        $user->posts()->create($input);
+
+        return redirect('/admin/posts');
     }
 
     /**
