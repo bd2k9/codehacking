@@ -58,6 +58,8 @@ class AdminUsersController extends Controller
 
         } else {
             
+            //Quando queremos alterar algo do request, é esta a formula
+            //Aqui estamos a encriptar a password
             
             $request['password'] = bcrypt($request->password);
             
@@ -190,6 +192,7 @@ class AdminUsersController extends Controller
         $user = User::findOrFail($id);
 
         //Esta condição vai servir caso o utilizador não tenha uma foto
+        //Optional a não esquecer
 
         if(optional($user->photo)->file){
             unlink(public_path() . $user->photo->file);   
