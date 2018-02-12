@@ -6,6 +6,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Role;
 use App\Photo;
+use App\Post;
 
 class User extends Authenticatable
 {
@@ -48,10 +49,9 @@ class User extends Authenticatable
 
     }
 
-    public function encryptPassword(UsersCreateRequest $request){
+    public function posts(){
 
-        return $this->password->bcrypt($request['password']);
-
+        return $this->hasMany(Post::class);
     }
 
 }

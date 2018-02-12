@@ -35,6 +35,7 @@ class AdminUsersController extends Controller
     public function create()
     {
         //Pluck substitui lists em versões mais avançadas do Laravel como esta
+        //Retorna todos os valores das seguintes variaveis (name e id)
 
         $roles = Role::pluck('name', 'id')->all();;
 
@@ -59,6 +60,9 @@ class AdminUsersController extends Controller
         } else {
             
             //Quando queremos alterar algo do request, é esta a formula
+            //$request['variavel que pretendemos alterar'] = qualquer coisa;
+            //Fazer isto antes de fazer o request do input
+            //Em condições normais, o ideal será fazer um request das variaveis uma a uma
             //Aqui estamos a encriptar a password
             
             $request['password'] = bcrypt($request->password);
